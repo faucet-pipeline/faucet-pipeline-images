@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+root=`dirname "$0"`
+root=`realpath "$root"`
+
+. "$root/../node_modules/faucet-pipeline/test/cli_harness.sh"
+
+# TODO: Move to cli_harness
+function assert_smaller_size {
+	original=$(wc -c < "${1:?}")
+	result=$(wc -c < "${2:?}")
+
+	if [ $(bc <<< "$result < $original") != 1 ]; then
+		fail "file \`$2\` is not smaller than \`$1\`"
+	else
+		true
+	fi
+}
+
+begin "$root/test_basic"
+	faucet
+	assert_missing dist/test.txt
+	assert_identical src/example.jpg dist/example.jpg
+	assert_identical src/example.png dist/example.png
+	assert_identical src/example.gif dist/example.gif
+	assert_identical src/example.svg dist/example.svg
+end
+
+begin "$root/test_basic"
+	faucet --compact
+	assert_missing dist/test.txt
+	assert_smaller_size src/example.jpg dist/example.jpg
+	assert_smaller_size src/example.png dist/example.png
+	assert_smaller_size src/example.gif dist/example.gif
+	assert_smaller_size src/example.svg dist/example.svg
+end
+
+echo; echo "SUCCESS: all tests passed"
