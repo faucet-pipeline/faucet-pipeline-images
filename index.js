@@ -50,10 +50,11 @@ function buildMinifier(minifyConfig, assetManager, { compact }) {
 		// otherwise, `target`'s parent directory is used
 		return results.isDirectory() ? target : path.dirname(target);
 	}).then(targetDir => {
+		let { fingerprint } = minifyConfig;
 		return files => {
 			(files ? fileFinder.match(files) : fileFinder.all()).
 				then(fileNames => processFiles(fileNames, {
-					assetManager, source, target, targetDir, plugins
+					assetManager, source, target, targetDir, plugins, fingerprint
 				}));
 		};
 	});
@@ -63,7 +64,8 @@ function processFiles(fileNames, config) {
 	return Promise.all(fileNames.map(fileName => processFile(fileName, config)));
 }
 
-function processFile(fileName, { source, target, targetDir, assetManager, plugins }) {
+function processFile(fileName,
+		{ source, target, targetDir, assetManager, plugins, fingerprint }) {
 	let sourcePath = path.join(source, fileName);
 	let targetPath = path.join(target, fileName);
 
@@ -76,9 +78,13 @@ function processFile(fileName, { source, target, targetDir, assetManager, plugin
 				return content;
 			}
 		}).
-		then(content => assetManager.writeFile(targetPath, content, {
-			targetDir
-		})).
+		then(content => {
+			let options = { targetDir };
+			if(fingerprint !== undefined) {
+				options.fingerprint = fingerprint;
+			}
+			return assetManager.writeFile(targetPath, content, options);
+		}).
 		catch(abort);
 }
 
