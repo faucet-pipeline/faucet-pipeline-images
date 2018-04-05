@@ -48,4 +48,11 @@ begin "$root/test_custom"
 	assert_identical expected.txt dist/example.png
 end
 
+begin "$root/test_fingerprint"
+	faucet --fingerprint
+	assert_identical src/example.jpg dist/fingerprint/example-fd9181b726249ab5bbf27fcdf35bd074.jpg
+	assert_identical src/example.jpg dist/no-fingerprint/example.jpg
+end
+
+
 echo; echo "SUCCESS: all tests passed"

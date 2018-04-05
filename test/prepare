@@ -12,3 +12,5 @@ cp test/test_basic/src/example.png test/test_custom/src/example.png
 cp test/test_basic/src/example.gif test/test_custom/src/example.gif
 cp test/test_basic/src/example.svg test/test_custom/src/example.svg
 cp test/test_basic/src/example.webp test/test_custom/src/example.webp
+
+cp test/test_basic/src/example.jpg test/test_fingerprint/src/example.jpg
