@@ -4,7 +4,15 @@ node_js:
 - 8
 - 10
 
+addons:
+    apt:
+        packages:
+        - autoconf
+        - automake
+        - libtool
+        - nasm
+        - make
+        - pkg-config
+
 before_install:
-- sudo apt-get -qq update
-- sudo apt-get install -y realpath autoconf automake libtool nasm make pkg-config
 - npm run test:prepare
