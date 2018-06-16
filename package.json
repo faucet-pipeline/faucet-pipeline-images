@@ -20,7 +20,7 @@
 	},
 	"homepage": "http://www.faucet-pipeline.org",
 	"dependencies": {
-		"faucet-pipeline": "~1.0.0-rc.5",
+		"faucet-pipeline": "~1.0.0-rc.6",
 		"image-type": "^3.0.0",
 		"imagemin-mozjpeg": "^7.0.0",
 		"imagemin-pngquant": "^5.1.0",
