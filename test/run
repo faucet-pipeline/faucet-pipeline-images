@@ -4,7 +4,7 @@ set -euo pipefail
 root=`dirname "$0"`
 root=`node -r fs -p "fs.realpathSync(process.argv[1]);" "$root"`
 
-. "$root/../node_modules/faucet-pipeline/test/cli_harness.sh"
+. "$root/../node_modules/faucet-pipeline-core/test/cli_harness.sh"
 
 # ensures the second file is smaller than the first file
 function assert_smaller_size {

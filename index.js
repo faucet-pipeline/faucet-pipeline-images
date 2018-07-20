@@ -1,6 +1,6 @@
 let path = require("path");
-let { abort, promisify } = require("faucet-pipeline/lib/util");
-let FileFinder = require("faucet-pipeline/lib/util/files/finder");
+let { abort, promisify } = require("faucet-pipeline-core/lib/util");
+let FileFinder = require("faucet-pipeline-core/lib/util/files/finder");
 let imageType = require("image-type");
 let isSvg = require("is-svg");
 
