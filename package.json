@@ -24,7 +24,7 @@
 		"image-type": "^3.0.0",
 		"imagemin-mozjpeg": "^7.0.0",
 		"imagemin-pngquant": "^6.0.0",
-		"imagemin-svgo": "^6.0.0"
+		"imagemin-svgo": "^7.0.0"
 	},
 	"devDependencies": {
 		"eslint-config-fnd": "^1.6.0",
