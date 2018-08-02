@@ -1,6 +1,6 @@
 {
 	"name": "faucet-pipeline-images",
-	"version": "0.0.4",
+	"version": "0.0.5",
 	"description": "Images Asset Pipeline",
 	"main": "index.js",
 	"scripts": {
@@ -20,7 +20,7 @@
 	},
 	"homepage": "http://www.faucet-pipeline.org",
 	"dependencies": {
-		"faucet-pipeline-core": "~1.0.0-rc.9",
+		"faucet-pipeline-core": "~1.0.0-rc.10",
 		"image-type": "^3.0.0",
 		"imagemin-mozjpeg": "^7.0.0",
 		"imagemin-pngquant": "^6.0.0",
