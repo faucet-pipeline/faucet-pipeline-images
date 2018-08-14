@@ -1,8 +1,6 @@
 let path = require("path");
 let { abort, promisify } = require("faucet-pipeline-core/lib/util");
 let FileFinder = require("faucet-pipeline-core/lib/util/files/finder");
-let imageType = require("image-type");
-let isSvg = require("is-svg");
 
 let readFile = promisify(require("fs").readFile);
 let stat = promisify(require("fs").stat);
@@ -62,7 +60,7 @@ function processFile(fileName,
 
 	return readFile(sourcePath).
 		then(content => {
-			let type = determineFileType(content);
+			let type = determineFileType(sourcePath);
 			if(type && plugins.hasOwnProperty(type)) {
 				return plugins[type](content);
 			} else {
@@ -79,21 +77,13 @@ function processFile(fileName,
 		catch(abort);
 }
 
-// TODO: Another option would be to just look at the file extension
-function determineFileType(content) {
-	let type = imageType(content);
-	if(type) {
-		return type.ext;
-	} else if(isSvg(content)) {
-		return "svg";
-	} else {
-		return false;
-	}
+function determineFileType(sourcePath) {
+	return path.extname(sourcePath).substr(1).toLowerCase();
 }
 
 // Defaults to file extensions of common image formats
 function defaultFilter(name) {
-	let extension = path.extname(name).substr(1).toLowerCase();
+	let extension = determineFileType(name);
 	return ["jpg", "jpeg", "png", "gif", "svg", "webp"].includes(extension);
 }
 
