@@ -20,7 +20,7 @@ function assert_smaller_size {
 
 begin "$root/test_basic"
 	faucet
-	assert_missing dist/test.txt
+	assert_identical src/test.txt dist/test.txt
 	assert_identical src/example.jpg dist/example.jpg
 	assert_identical src/example.png dist/example.png
 	assert_identical src/example.gif dist/example.gif
@@ -30,7 +30,7 @@ end
 
 begin "$root/test_basic"
 	faucet --compact
-	assert_missing dist/test.txt
+	assert_identical src/test.txt dist/test.txt
 	assert_smaller_size src/example.jpg dist/example.jpg
 	assert_smaller_size src/example.png dist/example.png
 	assert_identical src/example.gif dist/example.gif
@@ -40,7 +40,6 @@ end
 
 begin "$root/test_custom"
 	faucet --compact
-	assert_missing dist/test.txt
 	assert_missing dist/example.gif
 	assert_missing dist/example.svg
 	assert_missing dist/example.webp

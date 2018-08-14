@@ -18,7 +18,8 @@ function buildMinifier(minifyConfig, assetManager, { compact }) {
 		enforceRelative: true
 	});
 	let fileFinder = new FileFinder(source, {
-		filter: minifyConfig.filter || defaultFilter
+		skipDotfiles: true,
+		filter: minifyConfig.filter
 	});
 	let { fingerprint } = minifyConfig;
 
@@ -79,12 +80,6 @@ function processFile(fileName,
 
 function determineFileType(sourcePath) {
 	return path.extname(sourcePath).substr(1).toLowerCase();
-}
-
-// Defaults to file extensions of common image formats
-function defaultFilter(name) {
-	let extension = determineFileType(name);
-	return ["jpg", "jpeg", "png", "gif", "svg", "webp"].includes(extension);
 }
 
 // Defaults to recommendation by https://images.guide for JPG, PNG and SVG
