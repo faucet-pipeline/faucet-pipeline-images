@@ -8,24 +8,21 @@ let readFile = promisify(require("fs").readFile);
 let stat = promisify(require("fs").stat);
 
 module.exports = (pluginConfig, assetManager, { watcher, compact }) => {
-	buildMinifyAll(pluginConfig, assetManager, { compact }).
-		then(minifyAll => {
-			// Run once for all files
-			minifyAll();
+	let minifyAll = buildMinifyAll(pluginConfig, assetManager, { compact });
 
-			if(watcher) {
-				watcher.on("edit", minifyAll);
-			}
-		});
+	// Run once for all files
+	minifyAll();
+
+	if(watcher) {
+		watcher.on("edit", minifyAll);
+	}
 };
 
 function buildMinifyAll(minifyConfigs, assetManager, options) {
-	let futureMinifier = minifyConfigs.map(minifyConfig =>
+	let minifiers = minifyConfigs.map(minifyConfig =>
 		buildMinifier(minifyConfig, assetManager, options));
 
-	return Promise.all(futureMinifier).then(copiers => {
-		return files => copiers.forEach(copier => copier(files));
-	});
+	return files => minifiers.forEach(copier => copier(files));
 }
 
 function buildMinifier(minifyConfig, assetManager, { compact }) {
@@ -36,6 +33,7 @@ function buildMinifier(minifyConfig, assetManager, { compact }) {
 	let fileFinder = new FileFinder(source, {
 		filter: minifyConfig.filter || defaultFilter
 	});
+	let { fingerprint } = minifyConfig;
 
 	let plugins = {};
 	if(compact) {
@@ -45,19 +43,23 @@ function buildMinifier(minifyConfig, assetManager, { compact }) {
 		plugins = minifyConfig.plugins || defaultPlugins();
 	}
 
-	return stat(source).then(results => {
-		// If `source` is a directory, `target` is used as target directory -
-		// otherwise, `target`'s parent directory is used
-		return results.isDirectory() ? target : path.dirname(target);
-	}).then(targetDir => {
-		let { fingerprint } = minifyConfig;
-		return files => {
-			(files ? fileFinder.match(files) : fileFinder.all()).
-				then(fileNames => processFiles(fileNames, {
-					assetManager, source, target, targetDir, plugins, fingerprint
-				}));
-		};
-	});
+	return files => {
+		return Promise.all([
+			(files ? fileFinder.match(files) : fileFinder.all()),
+			determineTargetDir(source, target)
+		]).then(([fileNames, targetDir]) => {
+			return processFiles(fileNames, {
+				assetManager, source, target, targetDir, plugins, fingerprint
+			});
+		});
+	};
+}
+
+// If `source` is a directory, `target` is used as target directory -
+// otherwise, `target`'s parent directory is used
+function determineTargetDir(source, target) {
+	return stat(source).
+		then(results => results.isDirectory() ? target : path.dirname(target));
 }
 
 function processFiles(fileNames, config) {
