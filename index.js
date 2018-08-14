@@ -7,23 +7,12 @@ let isSvg = require("is-svg");
 let readFile = promisify(require("fs").readFile);
 let stat = promisify(require("fs").stat);
 
-module.exports = (pluginConfig, assetManager, { watcher, compact }) => {
-	let minifyAll = buildMinifyAll(pluginConfig, assetManager, { compact });
-
-	// Run once for all files
-	minifyAll();
-
-	if(watcher) {
-		watcher.on("edit", minifyAll);
-	}
-};
-
-function buildMinifyAll(minifyConfigs, assetManager, options) {
-	let minifiers = minifyConfigs.map(minifyConfig =>
-		buildMinifier(minifyConfig, assetManager, options));
+module.exports = (pluginConfig, assetManager, { compact }) => {
+	let minifiers = pluginConfig.map(minifyConfig =>
+		buildMinifier(minifyConfig, assetManager, { compact }));
 
 	return files => minifiers.forEach(copier => copier(files));
-}
+};
 
 function buildMinifier(minifyConfig, assetManager, { compact }) {
 	let source = assetManager.resolvePath(minifyConfig.source);

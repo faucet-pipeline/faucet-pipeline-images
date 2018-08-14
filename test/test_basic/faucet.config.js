@@ -7,6 +7,9 @@ module.exports = {
 		target: "./dist"
 	}],
 	plugins: {
-		"images": path.resolve("../..")
+		"images": {
+			package: path.resolve("../.."),
+			bucket: "static"
+		}
 	}
 };
