@@ -1,32 +1,16 @@
 let path = require("path");
 let { abort, promisify } = require("faucet-pipeline-core/lib/util");
 let FileFinder = require("faucet-pipeline-core/lib/util/files/finder");
-let imageType = require("image-type");
-let isSvg = require("is-svg");
 
 let readFile = promisify(require("fs").readFile);
 let stat = promisify(require("fs").stat);
 
-module.exports = (pluginConfig, assetManager, { watcher, compact }) => {
-	buildMinifyAll(pluginConfig, assetManager, { compact }).
-		then(minifyAll => {
-			// Run once for all files
-			minifyAll();
+module.exports = (pluginConfig, assetManager, { compact }) => {
+	let minifiers = pluginConfig.map(minifyConfig =>
+		buildMinifier(minifyConfig, assetManager, { compact }));
 
-			if(watcher) {
-				watcher.on("edit", minifyAll);
-			}
-		});
+	return files => minifiers.forEach(copier => copier(files));
 };
-
-function buildMinifyAll(minifyConfigs, assetManager, options) {
-	let futureMinifier = minifyConfigs.map(minifyConfig =>
-		buildMinifier(minifyConfig, assetManager, options));
-
-	return Promise.all(futureMinifier).then(copiers => {
-		return files => copiers.forEach(copier => copier(files));
-	});
-}
 
 function buildMinifier(minifyConfig, assetManager, { compact }) {
 	let source = assetManager.resolvePath(minifyConfig.source);
@@ -34,8 +18,10 @@ function buildMinifier(minifyConfig, assetManager, { compact }) {
 		enforceRelative: true
 	});
 	let fileFinder = new FileFinder(source, {
-		filter: minifyConfig.filter || defaultFilter
+		skipDotfiles: true,
+		filter: minifyConfig.filter
 	});
+	let { fingerprint } = minifyConfig;
 
 	let plugins = {};
 	if(compact) {
@@ -45,19 +31,23 @@ function buildMinifier(minifyConfig, assetManager, { compact }) {
 		plugins = minifyConfig.plugins || defaultPlugins();
 	}
 
-	return stat(source).then(results => {
-		// If `source` is a directory, `target` is used as target directory -
-		// otherwise, `target`'s parent directory is used
-		return results.isDirectory() ? target : path.dirname(target);
-	}).then(targetDir => {
-		let { fingerprint } = minifyConfig;
-		return files => {
-			(files ? fileFinder.match(files) : fileFinder.all()).
-				then(fileNames => processFiles(fileNames, {
-					assetManager, source, target, targetDir, plugins, fingerprint
-				}));
-		};
-	});
+	return files => {
+		return Promise.all([
+			(files ? fileFinder.match(files) : fileFinder.all()),
+			determineTargetDir(source, target)
+		]).then(([fileNames, targetDir]) => {
+			return processFiles(fileNames, {
+				assetManager, source, target, targetDir, plugins, fingerprint
+			});
+		});
+	};
+}
+
+// If `source` is a directory, `target` is used as target directory -
+// otherwise, `target`'s parent directory is used
+function determineTargetDir(source, target) {
+	return stat(source).
+		then(results => results.isDirectory() ? target : path.dirname(target));
 }
 
 function processFiles(fileNames, config) {
@@ -71,7 +61,7 @@ function processFile(fileName,
 
 	return readFile(sourcePath).
 		then(content => {
-			let type = determineFileType(content);
+			let type = determineFileType(sourcePath);
 			if(type && plugins.hasOwnProperty(type)) {
 				return plugins[type](content);
 			} else {
@@ -88,22 +78,8 @@ function processFile(fileName,
 		catch(abort);
 }
 
-// TODO: Another option would be to just look at the file extension
-function determineFileType(content) {
-	let type = imageType(content);
-	if(type) {
-		return type.ext;
-	} else if(isSvg(content)) {
-		return "svg";
-	} else {
-		return false;
-	}
-}
-
-// Defaults to file extensions of common image formats
-function defaultFilter(name) {
-	let extension = path.extname(name).substr(1).toLowerCase();
-	return ["jpg", "jpeg", "png", "gif", "svg", "webp"].includes(extension);
+function determineFileType(sourcePath) {
+	return path.extname(sourcePath).substr(1).toLowerCase();
 }
 
 // Defaults to recommendation by https://images.guide for JPG, PNG and SVG

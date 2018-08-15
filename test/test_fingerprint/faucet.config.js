@@ -11,6 +11,9 @@ module.exports = {
 		fingerprint: false
 	}],
 	plugins: {
-		"images": path.resolve("../..")
+		"images": {
+			plugin: path.resolve("../.."),
+			bucket: "static"
+		}
 	}
 };

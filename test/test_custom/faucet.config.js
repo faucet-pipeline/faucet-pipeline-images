@@ -15,7 +15,10 @@ module.exports = {
 		}
 	}],
 	plugins: {
-		"images": path.resolve("../..")
+		"images": {
+			plugin: path.resolve("../.."),
+			bucket: "static"
+		}
 	}
 };
 
