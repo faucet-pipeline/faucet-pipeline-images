@@ -13,6 +13,3 @@ addons:
         - nasm
         - make
         - pkg-config
-
-before_install:
-- npm run test:prepare
