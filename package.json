@@ -2,9 +2,6 @@
 	"name": "faucet-pipeline-images",
 	"version": "0.1.0",
 	"description": "Images Asset Pipeline",
-	"scripts": {
-		"test": "echo 'No Code, No Tests'"
-	},
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/faucet-pipeline/faucet-pipeline-images.git"
