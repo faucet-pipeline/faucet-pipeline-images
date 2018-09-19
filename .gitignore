@@ -1,14 +1,2 @@
 /node_modules
-/.eslintcache
-
-/samples/css.json
-/samples/output/
-
 /package-lock.json
-
-# Ignore the images
-*jpg
-*png
-*webp
-*gif
-*svg
