@@ -3,7 +3,6 @@
 . ./node_modules/release-util-fnd/lib.sh
 
 pre_release_checks
-npm test
 
 create_package > /dev/null
 publish_package
