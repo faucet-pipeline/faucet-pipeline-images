@@ -1,7 +1,7 @@
 {
 	"name": "faucet-pipeline-images",
-	"version": "0.1.0",
-	"description": "Images Asset Pipeline",
+	"version": "1.0.0",
+	"description": "image optimization for faucet-pipeline",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/faucet-pipeline/faucet-pipeline-images.git"
@@ -11,12 +11,12 @@
 	"bugs": {
 		"url": "https://github.com/faucet-pipeline/faucet-pipeline-images/issues"
 	},
-	"homepage": "http://www.faucet-pipeline.org",
+	"homepage": "https://www.faucet-pipeline.org",
 	"dependencies": {
-		"faucet-pipeline-static": "~1.0.0-rc.9",
-		"imagemin-mozjpeg": "^7.0.0",
-		"imagemin-pngquant": "^6.0.0",
-		"imagemin-svgo": "^7.0.0"
+		"faucet-pipeline-static": "^1.0.0",
+		"imagemin-mozjpeg": "~7.0.0",
+		"imagemin-pngquant": "~6.0.0",
+		"imagemin-svgo": "~7.0.0"
 	},
 	"devDependencies": {
 		"release-util-fnd": "^1.1.1"
