@@ -16,7 +16,7 @@
 		"faucet-pipeline-static": "^1.0.0",
 		"imagemin-mozjpeg": "~8.0.0",
 		"imagemin-pngquant": "~8.0.0",
-		"imagemin-svgo": "~7.0.0"
+		"imagemin-svgo": "~7.1.0"
 	},
 	"devDependencies": {
 		"release-util-fnd": "^1.1.1"
