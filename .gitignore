@@ -1,2 +1,11 @@
 /node_modules
+/.eslintcache
+
 /package-lock.json
+
+# Ignore the images
+*.jpg
+*.png
+*.webp
+*.gif
+*.svg
