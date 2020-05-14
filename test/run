@@ -1,0 +1,91 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+root=`dirname "$0"`
+root=`node -r fs -p "fs.realpathSync(process.argv[1]);" "$root"`
+
+. "$root/../node_modules/faucet-pipeline-core/test/cli_harness.sh"
+
+# ensures the second file is smaller than the first file
+function assert_smaller_size {
+	original=$(wc -c < "${1:?}")
+	result=$(wc -c < "${2:?}")
+
+	if [ $(bc <<< "$result < $original") != 1 ]; then
+		fail "file \`$2\` is not smaller than \`$1\`"
+	else
+		true
+	fi
+}
+
+# compare the mime type of a given file to the expected mime type
+# can't recognize SVG
+function assert_mime_type {
+	expected_mime="${1:?}"
+	actual_mime=$(file-type "${2:?}" | tail -n1)
+
+	if [ "$expected_mime" == "$actual_mime" ]; then
+		true
+	else
+		fail "expected $2 to be a $expected_mime, but was $actual_mime"
+	fi
+}
+
+# very naive SVG check
+function assert_svg {
+	grep -q svg "${1:?}" || fail "expected $1 to be an SVG"
+}
+
+# checks the dimensions of an image, requires ImageMagick
+function assert_dimensions {
+	expected_dimensions="${1:?}"
+	actual_dimensions=$(identify -format "%wx%h" "${2:?}")
+
+	if [ "$expected_dimensions" == "$actual_dimensions" ]; then
+		true
+	else
+		fail "expected $2 to be a $expected_dimensions, but was $actual_dimensions"
+	fi
+}
+
+begin "$root/test_basic"
+	faucet
+
+	assert_smaller_size src/example.jpg dist/example.jpg
+	assert_mime_type "image/jpeg" dist/example.jpg
+
+	assert_smaller_size src/example.png dist/example.png
+	assert_mime_type "image/png" dist/example.png
+
+	assert_smaller_size src/example.webp dist/example.webp
+	assert_mime_type "image/webp" dist/example.webp
+
+	assert_smaller_size src/example.svg dist/example.svg
+	assert_svg dist/example.svg
+
+	assert_missing dist/example.gif
+end
+
+# TODO: Note that by default, faucet does not change the file extension
+# we need to do that as an option `extension`
+begin "$root/test_webp"
+	faucet
+	assert_mime_type "image/webp" dist/example.jpg
+	assert_mime_type "image/webp" dist/example.png
+	assert_mime_type "image/webp" dist/example.webp
+end
+
+begin "$root/test_resizing"
+	faucet
+
+	assert_mime_type "image/jpeg" dist/nested/example-small.jpg
+	assert_dimensions "3000x2000" dist/nested/example-small.jpg
+
+	assert_mime_type "image/jpeg" dist/nested/example-thumbnail.jpg
+	assert_dimensions "300x200" dist/nested/example-thumbnail.jpg
+
+	assert_mime_type "image/jpeg" dist/nested/example-square.jpg
+	assert_dimensions "300x300" dist/nested/example-square.jpg
+end
+
+echo; echo "SUCCESS: all tests passed"
