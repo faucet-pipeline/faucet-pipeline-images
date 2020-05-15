@@ -77,11 +77,11 @@ async function processFiles(fileNames, config) {
 }
 
 async function processFile(fileName,
-		{ source, target, targetDir, fingerprint, assetManager, variant, suffix }) {
+		{ source, target, targetDir, fingerprint, assetManager, variant }) {
 	let sourcePath = path.join(source, fileName);
-	let targetPath = path.join(target, fileName);
+	let targetPath = addSuffix(path.join(target, fileName), variant.suffix);
 
-	let format = variant.format ? variant.format : fileExtension(fileName);
+	let format = variant.format ? variant.format : extname(fileName);
 
 	let output = format === "svg" ?
 		await optimizeSVG(sourcePath) :
@@ -138,11 +138,18 @@ async function optimizeBitmap(sourcePath, format,
 	return image.toBuffer();
 }
 
+function addSuffix(filepath, suffix = "") {
+	let directory = path.dirname(filepath);
+	let extension = path.extname(filepath);
+	let basename = path.basename(filepath, extension);
+	return path.join(directory, `${basename}${suffix}${extension}`);
+}
+
 function withFileExtension(...extensions) {
-	return filename => extensions.includes(fileExtension(filename));
+	return filename => extensions.includes(extname(filename));
 }
 
 // extname follows this annoying idea that the dot belongs to the extension
-function fileExtension(filename) {
+function extname(filename) {
 	return path.extname(filename).slice(1);
 }

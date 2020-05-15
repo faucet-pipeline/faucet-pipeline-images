@@ -75,26 +75,17 @@ begin "$root/test_webp"
 	assert_mime_type "image/webp" dist/example.webp
 end
 
-begin "$root/test_thumbnail"
+begin "$root/test_resizing"
 	faucet
-	assert_dimensions "300x200" dist/example.jpg
-	assert_dimensions "300x225" dist/example.png
+
+	assert_mime_type "image/jpeg" dist/nested/example-small.jpg
+	assert_dimensions "3000x2000" dist/nested/example-small.jpg
+
+	assert_mime_type "image/jpeg" dist/nested/example-thumbnail.jpg
+	assert_dimensions "300x200" dist/nested/example-thumbnail.jpg
+
+	assert_mime_type "image/jpeg" dist/nested/example-square.jpg
+	assert_dimensions "300x300" dist/nested/example-square.jpg
 end
-
-begin "$root/test_thumbnail_square"
-	faucet
-	assert_dimensions "300x300" dist/example.jpg
-	assert_dimensions "300x300" dist/example.png
-end
-
-# TODO: This does not work on Github Actions, and I don't know why
-# begin "$root/test_scaling"
-# 	faucet
-# 	assert_dimensions "3000x2000" dist/example.jpg
-# 	assert_dimensions "280x210" dist/example.png
-# end
-
-# TODO: Add Suffix
-# Merge the last three tests into one with three different suffixes
 
 echo; echo "SUCCESS: all tests passed"
