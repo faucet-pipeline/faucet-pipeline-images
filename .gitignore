@@ -4,6 +4,7 @@
 /package-lock.json
 
 # Ignore the images
+*.JPEG
 *.jpg
 *.png
 *.webp

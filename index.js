@@ -151,5 +151,5 @@ function withFileExtension(...extensions) {
 
 // extname follows this annoying idea that the dot belongs to the extension
 function extname(filename) {
-	return path.extname(filename).slice(1);
+	return path.extname(filename).slice(1).toLowerCase();
 }
