@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 set -xeuo pipefail
 
-curl -o "test/test_basic/src/example.jpg" "https://images.unsplash.com/photo-1498496294664-d9372eb521f3?fm=jpg&q=85"
-curl -o "test/test_basic/src/example.png" "https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/PNG_transparency_demonstration_1.png/560px-PNG_transparency_demonstration_1.png"
-curl -o "test/test_basic/src/example.gif" "https://upload.wikimedia.org/wikipedia/commons/2/2c/Rotating_earth_%28large%29.gif"
-curl -o "test/test_basic/src/example.svg" "https://upload.wikimedia.org/wikipedia/commons/0/02/SVG_logo.svg"
-curl -o "test/test_basic/src/example.webp" "https://www.gstatic.com/webp/gallery3/2_webp_a.webp"
+curl -C - -o "test/test_basic/src/example.jpg" "https://images.unsplash.com/photo-1498496294664-d9372eb521f3?fm=jpg&q=85"
+curl -C - -o "test/test_basic/src/example.png" "https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/PNG_transparency_demonstration_1.png/560px-PNG_transparency_demonstration_1.png"
+curl -C - -o "test/test_basic/src/example.gif" "https://upload.wikimedia.org/wikipedia/commons/2/2c/Rotating_earth_%28large%29.gif"
+curl -C - -o "test/test_basic/src/example.svg" "https://upload.wikimedia.org/wikipedia/commons/0/02/SVG_logo.svg"
+curl -C - -o "test/test_basic/src/example.webp" "https://www.gstatic.com/webp/gallery3/2_webp_a.webp"
 
 cp test/test_basic/src/example.jpg test/test_webp/src/example.jpg
 cp test/test_basic/src/example.png test/test_webp/src/example.png
