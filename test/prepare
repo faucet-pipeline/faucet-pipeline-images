@@ -7,6 +7,8 @@ curl -C - -o "test/test_basic/src/example.gif" "https://upload.wikimedia.org/wik
 curl -C - -o "test/test_basic/src/example.svg" "https://upload.wikimedia.org/wikipedia/commons/0/02/SVG_logo.svg"
 curl -C - -o "test/test_basic/src/example.webp" "https://www.gstatic.com/webp/gallery3/2_webp_a.webp"
 
+cp test/test_basic/src/example.jpg test/test_basic/src/UPPERCASE.JPEG
+
 cp test/test_basic/src/example.jpg test/test_webp/src/example.jpg
 cp test/test_basic/src/example.png test/test_webp/src/example.png
 cp test/test_basic/src/example.webp test/test_webp/src/example.webp
