@@ -54,6 +54,9 @@ begin "$root/test_basic"
 	assert_smaller_size src/example.jpg dist/example.jpg
 	assert_mime_type "image/jpeg" dist/example.jpg
 
+	assert_smaller_size src/UPPERCASE.JPEG dist/UPPERCASE.JPEG
+	assert_mime_type "image/jpeg" dist/UPPERCASE.JPEG
+
 	assert_smaller_size src/example.png dist/example.png
 	assert_mime_type "image/png" dist/example.png
 
