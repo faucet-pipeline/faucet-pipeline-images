@@ -69,6 +69,18 @@ begin "$root/test_basic"
 	assert_missing dist/example.gif
 end
 
+begin "$root/test_generated_names"
+	faucet
+	# no suffix, keep format
+	assert_smaller_size src/example.webp dist/example.webp
+	# no suffix, change format
+	assert_smaller_size src/example.webp dist/example.webp.webp
+	# add suffix, keep format
+	assert_smaller_size src/example.webp dist/example-suffix.webp
+	# add suffix, change format
+	assert_smaller_size src/example.webp dist/example-suffix.webp.webp
+end
+
 # TODO: Note that by default, faucet does not change the file extension
 # we need to do that as an option `extension`
 begin "$root/test_webp"
