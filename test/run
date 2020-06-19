@@ -73,9 +73,9 @@ end
 # we need to do that as an option `extension`
 begin "$root/test_webp"
 	faucet
-	assert_mime_type "image/webp" dist/example.jpg
-	assert_mime_type "image/webp" dist/example.png
-	assert_mime_type "image/webp" dist/example.webp
+	assert_mime_type "image/webp" dist/example.jpg.webp
+	assert_mime_type "image/webp" dist/example.png.webp
+	assert_mime_type "image/webp" dist/example.webp.webp
 end
 
 begin "$root/test_resizing"

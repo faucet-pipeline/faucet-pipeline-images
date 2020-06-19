@@ -78,7 +78,7 @@ async function processFiles(fileNames, config) {
 async function processFile(fileName,
 		{ source, target, targetDir, fingerprint, assetManager, variant }) {
 	let sourcePath = path.join(source, fileName);
-	let targetPath = addSuffix(path.join(target, fileName), variant.suffix);
+	let targetPath = determineTargetPath(path.join(target, fileName), variant);
 
 	let format = variant.format ? variant.format : extname(fileName);
 
@@ -137,11 +137,12 @@ async function optimizeBitmap(sourcePath, format,
 	return image.toBuffer();
 }
 
-function addSuffix(filepath, suffix = "") {
+function determineTargetPath(filepath, { format, suffix = "" }) {
+	format = format ? `.${format}` : "";
 	let directory = path.dirname(filepath);
 	let extension = path.extname(filepath);
 	let basename = path.basename(filepath, extension);
-	return path.join(directory, `${basename}${suffix}${extension}`);
+	return path.join(directory, `${basename}${suffix}${extension}${format}`);
 }
 
 function withFileExtension(...extensions) {
