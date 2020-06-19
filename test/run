@@ -81,8 +81,6 @@ begin "$root/test_generated_names"
 	assert_smaller_size src/example.webp dist/example-suffix.webp.webp
 end
 
-# TODO: Note that by default, faucet does not change the file extension
-# we need to do that as an option `extension`
 begin "$root/test_webp"
 	faucet
 	assert_mime_type "image/webp" dist/example.jpg.webp
