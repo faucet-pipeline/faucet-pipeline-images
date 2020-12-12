@@ -37,6 +37,7 @@ function makeOptimizer(optimizerConfig, assetManager) {
 		filter: withFileExtension("jpg", "jpeg", "png", "webp", "svg")
 	});
 	let {
+		autorotate,
 		fingerprint,
 		format,
 		width,
@@ -58,7 +59,7 @@ function makeOptimizer(optimizerConfig, assetManager) {
 			targetDir,
 			fingerprint,
 			variant: {
-				format, width, height, keepRatio, scale, suffix
+				autorotate, format, width, height, keepRatio, scale, suffix
 			}
 		});
 	};
@@ -106,8 +107,11 @@ async function optimizeSVG(sourcePath) {
 }
 
 async function optimizeBitmap(sourcePath, format,
-		{ width, height, scale, keepRatio = true }) {
+		{ autorotate, width, height, scale, keepRatio = true }) {
 	let image = sharp(sourcePath);
+	if(autorotate) {
+		image.rotate();
+	}
 
 	if(scale) {
 		let metadata = await image.metadata();
