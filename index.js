@@ -109,6 +109,8 @@ async function optimizeSVG(sourcePath) {
 async function optimizeBitmap(sourcePath, format,
 		{ width, height, scale, keepRatio = true }) {
 	let image = sharp(sourcePath);
+	
+	image.rotate(); // based on exif data
 
 	if(scale) {
 		let metadata = await image.metadata();
