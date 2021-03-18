@@ -11,7 +11,8 @@ let settings = {
 	svg: {},
 	png: { adaptiveFiltering: true },
 	jpeg: { progressive: true },
-	webp: {}
+	webp: {},
+	avif: {}
 };
 
 module.exports = {
@@ -34,7 +35,7 @@ function makeOptimizer(optimizerConfig, assetManager) {
 	});
 	let fileFinder = new FileFinder(source, {
 		skipDotfiles: true,
-		filter: withFileExtension("jpg", "jpeg", "png", "webp", "svg")
+		filter: withFileExtension("avif", "jpg", "jpeg", "png", "webp", "svg")
 	});
 	let {
 		autorotate,
@@ -133,8 +134,11 @@ async function optimizeBitmap(sourcePath, format,
 	case "webp":
 		image.webp(settings.webp);
 		break;
+	case "avif":
+		image.avif(settings.avif);
+		break;
 	default:
-		abort(`unsupported format ${format}. We support: JPG, PNG, WebP, SVG`);
+		abort(`unsupported format ${format}. We support: AVIF, JPG, PNG, WebP, SVG`);
 	}
 
 	return image.toBuffer();
