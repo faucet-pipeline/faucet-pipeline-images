@@ -11,6 +11,10 @@ cp test/test_basic/src/example.jpg test/test_basic/src/UPPERCASE.JPEG
 
 cp test/test_basic/src/example.webp test/test_generated_names/src/example.webp
 
+cp test/test_basic/src/example.jpg test/test_filter/src/example.jpg
+cp test/test_basic/src/example.png test/test_filter/src/example.png
+cp test/test_basic/src/example.webp test/test_filter/src/example.webp
+
 cp test/test_basic/src/example.jpg test/test_webp/src/example.jpg
 cp test/test_basic/src/example.png test/test_webp/src/example.png
 cp test/test_basic/src/example.webp test/test_webp/src/example.webp

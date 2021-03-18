@@ -35,7 +35,8 @@ function makeOptimizer(optimizerConfig, assetManager) {
 	});
 	let fileFinder = new FileFinder(source, {
 		skipDotfiles: true,
-		filter: withFileExtension("avif", "jpg", "jpeg", "png", "webp", "svg")
+		filter: optimizerConfig.filter ||
+			withFileExtension("avif", "jpg", "jpeg", "png", "webp", "svg")
 	});
 	let {
 		autorotate,
