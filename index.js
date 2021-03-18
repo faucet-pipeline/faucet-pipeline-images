@@ -8,7 +8,34 @@ let { abort } = require("faucet-pipeline-core/lib/util");
 // we can optimize the settings here, but some would require libvips
 // to be compiled with additional stuff
 let settings = {
-	svg: {},
+	svg: {
+		plugins: svgo.extendDefaultPlugins([
+			// do not remove title and desc for accessibility reasons
+			{
+				name: "removeTitle",
+				active: false
+			},
+			{
+				name: "removeDesc",
+				active: false
+			},
+
+			// configurations recommended by Cassie Evans to reduce problems
+			// when you want to style or animate your SVGs
+			{
+				name: "cleanupIDs",
+				active: false
+			},
+			{
+				name: "mergePaths",
+				active: false
+			},
+			{
+				name: "collapseGroups",
+				active: false
+			}
+		])
+	},
 	png: { adaptiveFiltering: true },
 	jpeg: { progressive: true },
 	webp: {},
