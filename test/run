@@ -69,6 +69,10 @@ begin "$root/test_basic"
 	assert_missing dist/example.gif
 end
 
+begin "$root/test_quality"
+	faucet
+end
+
 begin "$root/test_generated_names"
 	faucet
 	# no suffix, keep format

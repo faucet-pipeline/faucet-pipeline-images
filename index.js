@@ -44,6 +44,7 @@ function makeOptimizer(optimizerConfig, assetManager) {
 		width,
 		height,
 		keepRatio,
+		quality,
 		scale,
 		suffix
 	} = optimizerConfig;
@@ -60,7 +61,7 @@ function makeOptimizer(optimizerConfig, assetManager) {
 			targetDir,
 			fingerprint,
 			variant: {
-				autorotate, format, width, height, keepRatio, scale, suffix
+				autorotate, format, width, height, keepRatio, quality, scale, suffix
 			}
 		});
 	};
@@ -107,7 +108,7 @@ async function optimizeSVG(sourcePath) {
 }
 
 async function optimizeBitmap(sourcePath, format,
-		{ autorotate, width, height, scale, keepRatio = true }) {
+		{ autorotate, width, height, scale, quality, keepRatio = true }) {
 	let image = sharp(sourcePath);
 	if(autorotate) {
 		image.rotate();
@@ -126,16 +127,16 @@ async function optimizeBitmap(sourcePath, format,
 	switch(format) {
 	case "jpg":
 	case "jpeg":
-		image.jpeg(settings.jpeg);
+		image.jpeg({ ...settings.jpeg, quality });
 		break;
 	case "png":
 		image.png(settings.png);
 		break;
 	case "webp":
-		image.webp(settings.webp);
+		image.webp({ ...settings.webp, quality });
 		break;
 	case "avif":
-		image.avif(settings.avif);
+		image.avif({ ...settings.avif, quality });
 		break;
 	default:
 		abort(`unsupported format ${format}. We support: AVIF, JPG, PNG, WebP, SVG`);
