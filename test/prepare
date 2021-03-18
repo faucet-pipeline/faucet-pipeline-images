@@ -19,4 +19,8 @@ cp test/test_basic/src/example.jpg test/test_avif/src/example.jpg
 cp test/test_basic/src/example.png test/test_avif/src/example.png
 cp test/test_basic/src/example.webp test/test_avif/src/example.webp
 
+cp test/test_basic/src/example.jpg test/test_quality/src/example.jpg
+cp test/test_basic/src/example.png test/test_quality/src/example.png
+cp test/test_basic/src/example.webp test/test_quality/src/example.webp
+
 cp test/test_basic/src/example.jpg test/test_resizing/src/nested/example.jpg
