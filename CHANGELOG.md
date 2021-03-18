@@ -2,6 +2,24 @@ faucet-pipeline-images version history
 ======================================
 
 
+v2.0.0
+------
+
+_2020-03-18_
+
+improvements for end users:
+
+* this release makes this a standalone pipeline (no longer a plugin for static)
+* sharp is used for optimizing images as well as resizing and changing formats
+    * the image quality can be configured
+* svgo is used for optimizing SVGs
+* an option to add a suffix has been added
+
+changes for developers:
+
+* this is a rewrite of the entire codebase
+
+
 v1.2.0
 ------
 
