@@ -71,7 +71,7 @@ function makeOptimizer(optimizerConfig, assetManager) {
 		format,
 		width,
 		height,
-		keepRatio,
+		crop,
 		quality,
 		scale,
 		suffix
@@ -89,7 +89,7 @@ function makeOptimizer(optimizerConfig, assetManager) {
 			targetDir,
 			fingerprint,
 			variant: {
-				autorotate, format, width, height, keepRatio, quality, scale, suffix
+				autorotate, format, width, height, crop, quality, scale, suffix
 			}
 		});
 	};
@@ -136,7 +136,7 @@ async function optimizeSVG(sourcePath) {
 }
 
 async function optimizeBitmap(sourcePath, format,
-		{ autorotate, width, height, scale, quality, keepRatio = true }) {
+		{ autorotate, width, height, scale, quality, crop }) {
 	let image = sharp(sourcePath);
 	if(autorotate) {
 		image.rotate();
@@ -148,7 +148,7 @@ async function optimizeBitmap(sourcePath, format,
 	}
 
 	if(width || height) {
-		let fit = keepRatio ? "inside" : "cover";
+		let fit = crop ? "cover" : "inside";
 		image.resize({ width: width, height: height, fit: sharp.fit[fit] });
 	}
 

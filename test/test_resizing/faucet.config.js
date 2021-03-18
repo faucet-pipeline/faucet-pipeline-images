@@ -18,7 +18,7 @@ module.exports = {
 		target: "./dist",
 		width: 300,
 		height: 300,
-		keepRatio: false,
+		crop: true,
 		suffix: "-square"
 	}],
 	plugins: [path.resolve(__dirname, "../..")]
