@@ -1,7 +1,7 @@
 let path = require("path");
 let FileFinder = require("faucet-pipeline-core/lib/util/files/finder");
 let sharp = require("sharp");
-let SVGO = require("svgo");
+let svgo = require("svgo");
 let { stat, readFile } = require("fs").promises;
 let { abort } = require("faucet-pipeline-core/lib/util");
 
@@ -98,8 +98,7 @@ async function optimizeSVG(sourcePath) {
 	let input = await readFile(sourcePath);
 
 	try {
-		let svgo = new SVGO(settings.svg);
-		let output = await svgo.optimize(input);
+		let output = await svgo.optimize(input, settings.svg);
 		return output.data;
 	} catch(error) {
 		abort(`Only SVG can be converted to SVG: ${sourcePath}`);
