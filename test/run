@@ -6,6 +6,16 @@ root=`node -r fs -p "fs.realpathSync(process.argv[1]);" "$root"`
 
 . "$root/../node_modules/faucet-pipeline-core/test/cli_harness.sh"
 
+function assert_file {
+	filepath="${1:?}"
+
+	if [ -f "$filepath" ]; then
+		true
+	else
+		fail "file \`$filepath\` should exist"
+	fi
+}
+
 # ensures the second file is smaller than the first file
 function assert_smaller_size {
 	original=$(wc -c < "${1:?}")
@@ -65,6 +75,18 @@ begin "$root/test_basic"
 
 	assert_smaller_size src/example.svg dist/example.svg
 	assert_svg dist/example.svg
+
+	assert_missing dist/example.gif
+end
+
+begin "$root/test_filter"
+	faucet
+
+	assert_file dist/example.jpg
+	assert_missing dist/UPPERCASE.JPEG
+	assert_missing dist/example.png
+	assert_missing dist/example.webp
+	assert_missing dist/example.svg
 
 	assert_missing dist/example.gif
 end
