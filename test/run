@@ -88,6 +88,13 @@ begin "$root/test_webp"
 	assert_mime_type "image/webp" dist/example.webp.webp
 end
 
+begin "$root/test_avif"
+	faucet
+	assert_mime_type "image/avif" dist/example.jpg.avif
+	assert_mime_type "image/avif" dist/example.png.avif
+	assert_mime_type "image/avif" dist/example.webp.avif
+end
+
 begin "$root/test_resizing"
 	faucet
 
