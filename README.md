@@ -1,7 +1,7 @@
 # faucet-pipeline-images
 [![npm](https://img.shields.io/npm/v/faucet-pipeline-images.svg)](https://www.npmjs.com/package/faucet-pipeline-images)
 
-You can find the documentation [here](https://www.faucet-pipeline.org/images.html).
+You can find the documentation [here](https://www.faucet-pipeline.org/images).
 
 ## License
 
