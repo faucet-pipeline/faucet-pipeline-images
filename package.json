@@ -21,7 +21,7 @@
 	"homepage": "https://www.faucet-pipeline.org",
 	"dependencies": {
 		"faucet-pipeline-core": "^1.4.0",
-		"sharp": "^0.27.2",
+		"sharp": "^0.28.2",
 		"svgo": "^2.2.2"
 	},
 	"devDependencies": {
