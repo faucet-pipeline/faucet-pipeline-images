@@ -7,13 +7,14 @@ jobs:
         strategy:
             matrix:
                 node-version:
-                - 10.x
-                - 12.x
+                - 14.x
+                - 16.x
+                - 17.x
         steps:
-        - uses: actions/checkout@v2.3.4
-        - uses: actions/setup-node@v2.3.0
+        - uses: actions/checkout@v2.4.0
+        - uses: actions/setup-node@v2.5.1
           with:
               node-version: ${{ matrix.node-version }}
-        - run: npm i && npm run test:prepare && npm test
+        - run: npm run test:prepare && npm install-test
           env:
               CI: true
