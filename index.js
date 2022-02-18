@@ -9,7 +9,9 @@ let { abort } = require("faucet-pipeline-core/lib/util");
 // to be compiled with additional stuff
 let settings = {
 	svg: {
-		plugins: svgo.extendDefaultPlugins([
+		plugins: [
+			"preset-default",
+
 			// do not remove title and desc for accessibility reasons
 			{
 				name: "removeTitle",
@@ -34,10 +36,17 @@ let settings = {
 				name: "collapseGroups",
 				active: false
 			}
-		])
+		]
 	},
-	png: { adaptiveFiltering: true },
-	jpeg: { progressive: true },
+	png: {
+		compressionLevel: 9,
+		adaptiveFiltering: true,
+		palette: true
+	},
+	jpeg: {
+		progressive: true,
+		mozjpeg: true
+	},
 	webp: {},
 	avif: {}
 };
