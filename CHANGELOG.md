@@ -5,6 +5,13 @@ faucet-pipeline-images version history
 v2.0.0
 ------
 
+_2022-02-18_
+
+No significant changes compared to the beta version
+
+v2.0.0-beta
+-----------
+
 _2020-03-18_
 
 improvements for end users:

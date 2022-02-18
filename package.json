@@ -1,6 +1,6 @@
 {
 	"name": "faucet-pipeline-images",
-	"version": "2.0.0-beta",
+	"version": "2.0.0",
 	"description": "image optimization for faucet-pipeline",
 	"main": "index.js",
 	"scripts": {
