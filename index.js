@@ -158,7 +158,7 @@ async function optimizeBitmap(sourcePath, format,
 
 	if(width || height) {
 		let fit = crop ? "cover" : "inside";
-		image.resize({ width: width, height: height, fit: sharp.fit[fit] });
+		image.resize({ width, height, fit: sharp.fit[fit] });
 	}
 
 	switch(format) {

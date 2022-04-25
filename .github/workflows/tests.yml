@@ -8,11 +8,10 @@ jobs:
             matrix:
                 node-version:
                 - 14.x
-                - 16.x
-                - 17.x
+                - 18.x
         steps:
         - uses: actions/checkout@v3
-        - uses: actions/setup-node@v3.1.0
+        - uses: actions/setup-node@v3
           with:
               node-version: ${{ matrix.node-version }}
         - run: npm run test:prepare && npm install-test
