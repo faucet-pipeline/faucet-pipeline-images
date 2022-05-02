@@ -23,6 +23,7 @@
 		"node": ">= 14"
 	},
 	"dependencies": {
+		"exiftool-vendored": "^15.11.0",
 		"faucet-pipeline-core": "^1.7.0",
 		"sharp": "^0.30.4",
 		"svgo": "^2.8.0"
