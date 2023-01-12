@@ -25,7 +25,7 @@ let settings = {
 			// configurations recommended by Cassie Evans to reduce problems
 			// when you want to style or animate your SVGs
 			{
-				name: "cleanupIDs",
+				name: "cleanupIds",
 				active: false
 			},
 			{

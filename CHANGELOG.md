@@ -1,6 +1,13 @@
 faucet-pipeline-images version history
 ======================================
 
+v2.1.0
+------
+
+_2021-01-12_
+
+Maintenance release to update dependencies; no significant changes
+
 
 v2.0.0
 ------
