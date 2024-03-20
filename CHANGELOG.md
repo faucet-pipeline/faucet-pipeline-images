@@ -1,6 +1,14 @@
 faucet-pipeline-images version history
 ======================================
 
+v2.2.0
+------
+
+_2024-03-20_
+
+Maintenance release to update dependencies; bump minimum supported Node version
+to 18 due to end of life.
+
 v2.1.0
 ------
 
