@@ -30,7 +30,6 @@
 	"devDependencies": {
 		"eslint-config-fnd": "^1.13.0",
 		"file-type-cli": "^6.0.0",
-		"json-diff": "^1.0.0",
 		"release-util-fnd": "^3.0.0"
 	}
 }
