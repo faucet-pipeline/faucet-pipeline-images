@@ -32,7 +32,7 @@ function assert_smaller_size {
 # can't recognize SVG
 function assert_mime_type {
 	expected_mime="${1:?}"
-	actual_mime=$(file-type "${2:?}" | tail -n1)
+	actual_mime=$(file --brief --mime-type "${2:?}")
 
 	if [ "$expected_mime" == "$actual_mime" ]; then
 		true
