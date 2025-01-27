@@ -46,7 +46,7 @@ function assert_svg {
 	grep -q svg "${1:?}" || fail "expected $1 to be an SVG"
 }
 
-# checks the dimensions of an image, requires ImageMagick
+# checks the dimensions of an image
 function assert_dimensions {
 	expected_dimensions="${1:?}"
 	actual_dimensions=$(file "${2:?}" | grep -oE "[0-9]+x[0-9]+")
