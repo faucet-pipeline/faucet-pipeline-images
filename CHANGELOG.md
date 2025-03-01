@@ -1,12 +1,29 @@
 faucet-pipeline-images version history
 ======================================
 
+v2.3.0
+------
+
+_2025-11-03_
+
+notable changes for end users:
+
+* bumped Node requirement to v20 or later, dropping support for obsolete versions
+* reduced the number of third-party dependencies
+
+notable changes for developers:
+
+* switched from faucet-pipeline-core's FileFinder to faucet-pipeline-asset's
+  utils
+* removed requirement for ImageMagick to be installed
+
+
 v2.2.0
 ------
 
 _2024-03-20_
 
-Maintenance release to update dependencies; bump minimum supported Node version
+maintenance release to update dependencies; bump minimum supported Node version
 to 18 due to end of life.
 
 v2.1.0
@@ -14,7 +31,7 @@ v2.1.0
 
 _2021-01-12_
 
-Maintenance release to update dependencies; no significant changes
+maintenance release to update dependencies; no significant changes
 
 
 v2.0.0
