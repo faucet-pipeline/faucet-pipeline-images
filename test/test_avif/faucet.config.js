@@ -1,11 +1,9 @@
-"use strict";
-let path = require("path");
+import { resolve } from "node:path";
 
-module.exports = {
-	images: [{
-		source: "./src",
-		target: "./dist",
-		format: "avif"
-	}],
-	plugins: [path.resolve(__dirname, "../..")]
-};
+export const images = [{
+	source: "./src",
+	target: "./dist",
+	format: "avif"
+}];
+
+export const plugins = [resolve(import.meta.dirname, "../..")];
