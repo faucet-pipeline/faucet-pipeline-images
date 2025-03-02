@@ -1,5 +1,5 @@
 let path = require("path");
-let FileFinder = require("faucet-pipeline-core/lib/util/files/finder");
+let { FileFinder } = require("faucet-pipeline-core/lib/util/files/finder");
 let sharp = require("sharp");
 let svgo = require("svgo");
 let { stat, readFile } = require("fs").promises;
