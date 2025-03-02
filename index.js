@@ -1,9 +1,24 @@
-let path = require("path");
-let FileFinder = require("faucet-pipeline-core/lib/util/files/finder");
-let sharp = require("sharp");
-let svgo = require("svgo");
-let { stat, readFile } = require("fs").promises;
-let { abort } = require("faucet-pipeline-core/lib/util");
+import path from "node:path";
+import sharp from "sharp";
+import svgo from "svgo";
+import { readFile } from "node:fs/promises";
+import { buildProcessPipeline } from "faucet-pipeline-assets/lib/util.js";
+import { abort, repr } from "faucet-pipeline-core/lib/util/index.js";
+
+export const key = "images";
+export const bucket = "static";
+
+export function plugin(config, assetManager) {
+	let pipeline = config.map(optimizerConfig => {
+		let processFile = buildProcessFile(optimizerConfig);
+		let { source, target } = optimizerConfig;
+		let filter = optimizerConfig.filter ||
+			withFileExtension("avif", "jpg", "jpeg", "png", "webp", "svg");
+		return buildProcessPipeline(source, target, processFile, assetManager, filter);
+	});
+
+	return filepaths => Promise.all(pipeline.map(optimize => optimize(filepaths)));
+}
 
 // we can optimize the settings here, but some would require libvips
 // to be compiled with additional stuff
@@ -51,88 +66,35 @@ let settings = {
 	avif: {}
 };
 
-module.exports = {
-	key: "images",
-	bucket: "static",
-	plugin: faucetImages
-};
+/**
+ * Returns a function that processes a single file
+ */
+function buildProcessFile(config) {
+	return async function(filename,
+			{ source, target, targetDir, assetManager }) {
+		let sourcePath = path.join(source, filename);
+		let targetPath = determineTargetPath(path.join(target, filename), config);
 
-function faucetImages(config, assetManager) {
-	let optimizers = config.map(optimizerConfig =>
-		makeOptimizer(optimizerConfig, assetManager));
+		let format = config.format ? config.format : extname(filename);
 
-	return filepaths => Promise.all(optimizers.map(optimize => optimize(filepaths)));
-}
+		let output = format === "svg" ?
+			await optimizeSVG(sourcePath) :
+			await optimizeBitmap(sourcePath, format, config);
 
-function makeOptimizer(optimizerConfig, assetManager) {
-	let source = assetManager.resolvePath(optimizerConfig.source);
-	let target = assetManager.resolvePath(optimizerConfig.target, {
-		enforceRelative: true
-	});
-	let fileFinder = new FileFinder(source, {
-		skipDotfiles: true,
-		filter: optimizerConfig.filter ||
-			withFileExtension("avif", "jpg", "jpeg", "png", "webp", "svg")
-	});
-	let {
-		autorotate,
-		fingerprint,
-		format,
-		width,
-		height,
-		crop,
-		quality,
-		scale,
-		suffix
-	} = optimizerConfig;
-
-	return async filepaths => {
-		let [fileNames, targetDir] = await Promise.all([
-			(filepaths ? fileFinder.match(filepaths) : fileFinder.all()),
-			determineTargetDir(source, target)
-		]);
-		return processFiles(fileNames, {
-			assetManager,
-			source,
-			target,
-			targetDir,
-			fingerprint,
-			variant: {
-				autorotate, format, width, height, crop, quality, scale, suffix
-			}
-		});
+		let writeOptions = { targetDir };
+		if(config.fingerprint !== undefined) {
+			writeOptions.fingerprint = config.fingerprint;
+		}
+		return assetManager.writeFile(targetPath, output, writeOptions);
 	};
 }
 
-// If `source` is a directory, `target` is used as target directory -
-// otherwise, `target`'s parent directory is used
-async function determineTargetDir(source, target) {
-	let results = await stat(source);
-	return results.isDirectory() ? target : path.dirname(target);
-}
-
-async function processFiles(fileNames, config) {
-	return Promise.all(fileNames.map(fileName => processFile(fileName, config)));
-}
-
-async function processFile(fileName,
-		{ source, target, targetDir, fingerprint, assetManager, variant }) {
-	let sourcePath = path.join(source, fileName);
-	let targetPath = determineTargetPath(path.join(target, fileName), variant);
-
-	let format = variant.format ? variant.format : extname(fileName);
-
-	let output = format === "svg" ?
-		await optimizeSVG(sourcePath) :
-		await optimizeBitmap(sourcePath, format, variant);
-
-	let writeOptions = { targetDir };
-	if(fingerprint !== undefined) {
-		writeOptions.fingerprint = fingerprint;
-	}
-	return assetManager.writeFile(targetPath, output, writeOptions);
-}
-
+/**
+ * Optimize a single SVG
+ *
+ * @param {string} sourcePath
+ * @returns {Promise<string>}
+ */
 async function optimizeSVG(sourcePath) {
 	let input = await readFile(sourcePath);
 
@@ -140,10 +102,18 @@ async function optimizeSVG(sourcePath) {
 		let output = await svgo.optimize(input, settings.svg);
 		return output.data;
 	} catch(error) {
-		abort(`Only SVG can be converted to SVG: ${sourcePath}`);
+		abort(`Only SVG can be converted to SVG: ${repr(sourcePath)}`);
 	}
 }
 
+/**
+ * Optimize a single bitmap image
+ *
+ * @param {string} sourcePath
+ * @param {string} format
+ * @param {Object} options
+ * @returns {Promise<Buffer>}
+ */
 async function optimizeBitmap(sourcePath, format,
 		{ autorotate, width, height, scale, quality, crop }) {
 	let image = sharp(sourcePath);
@@ -153,7 +123,12 @@ async function optimizeBitmap(sourcePath, format,
 
 	if(scale) {
 		let metadata = await image.metadata();
-		image.resize({ width: metadata.width * scale, height: metadata.height * scale });
+		if(metadata.width && metadata.height) {
+			image.resize({
+				width: metadata.width * scale,
+				height: metadata.height * scale
+			});
+		}
 	}
 
 	if(width || height) {
@@ -176,12 +151,17 @@ async function optimizeBitmap(sourcePath, format,
 		image.avif({ ...settings.avif, quality });
 		break;
 	default:
-		abort(`unsupported format ${format}. We support: AVIF, JPG, PNG, WebP, SVG`);
+		abort(`unsupported format ${repr(format)}. We support: AVIF, JPG, PNG, WebP, SVG`);
 	}
 
 	return image.toBuffer();
 }
 
+/**
+ * @param {string} filepath
+ * @param {Object} options
+ * @returns {string}
+ */
 function determineTargetPath(filepath, { format, suffix = "" }) {
 	format = format ? `.${format}` : "";
 	let directory = path.dirname(filepath);
@@ -190,11 +170,20 @@ function determineTargetPath(filepath, { format, suffix = "" }) {
 	return path.join(directory, `${basename}${suffix}${extension}${format}`);
 }
 
+/**
+ * @param {...string} extensions
+ * @returns {Filter}
+ */
 function withFileExtension(...extensions) {
 	return filename => extensions.includes(extname(filename));
 }
 
-// extname follows this annoying idea that the dot belongs to the extension
+/**
+ * File extension of a filename without the dot
+ *
+ * @param {string} filename
+ * @returns {string}
+ */
 function extname(filename) {
 	return path.extname(filename).slice(1).toLowerCase();
 }
